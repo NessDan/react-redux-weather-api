@@ -1,0 +1,13 @@
+.city-weather-check > * {
+	display: block;
+}
+
+.weather-underground-attribution {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+
+.weather-underground-attribution p {
+	margin: 0;
+}
