@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { weatherConditions } from 'api/weather';
+import { connect } from 'react-redux'
+import { getWeatherConditions } from 'api/weather';
+import { setCityConditions } from 'actions/weather';
 import './index.css';
 
 class WeatherChecker extends Component {
@@ -7,24 +9,22 @@ class WeatherChecker extends Component {
 		super(props);
 
 		this.state = {
-			location: null,
-			weatherConditions: null,
+			location: '48226',
 		}
 	}
 
 	// https://facebook.github.io/react/docs/handling-events.html
-	handleCheckWeather = () => {
+	checkWeather = (event) => {
+		event.preventDefault();
+
 		const location = this.state.location;
 
-		weatherConditions(location).then((weatherConditions) => {
-			// Send up to redux and update global app state at this point.
-			this.setState({
-				weatherConditions,
-				conditionsCity: location, // separate the found location vs. textbox input
+		getWeatherConditions(location)
+			.then(setCityConditions) // generate our action
+			.then(this.props.dispatch) // then dispatch it
+			.catch((err) => {
+				console.error('Something went wrong while getting your weather.', err);
 			});
-		}).catch((err) => {
-			console.error('Something went wrong while getting your weather.', err);
-		});
 	}
 
 	handleLocationChange = (event) => {
@@ -33,35 +33,23 @@ class WeatherChecker extends Component {
 		});
 	}
 
-	generate
-
 	render() {
-		let weatherConditionsRender;
-
-		if (this.state.weatherConditions) {
-			weatherConditionsRender = (
-				<div className="city-weather-info">
-					The weather in {this.state.conditionsCity} is {this.state.weatherConditions}.
-				</div>
-			);
-		}
-
 		return (
 	        <div className="weather-checker">
-	        	{weatherConditionsRender}
-
 		        <div className="city-weather-check">
-			        <label htmlFor="city">Enter your City</label>
+			        <label htmlFor="city">Enter your ZIP or City and State</label>
+			        <form onSubmit={this.checkWeather}>
+				        <input
+				        	autoFocus
+				        	id="city"
+				        	type="text"
+				        	placeholder="Detroit, MI"
+				        	value={this.state.location}
+				        	onChange={this.handleLocationChange}
+			        	/>
 
-			        <input
-			        	id="city"
-			        	type="text"
-			        	placeholder="City"
-			        	value={this.state.location}
-			        	onChange={this.handleLocationChange}
-		        	/>
-
-			        <input type="button" value="Check the Weather" onClick={this.handleCheckWeather} />
+				        <input type="submit" value="Check the Weather" />
+			        </form>
 		        </div>
 
 		        <div className="weather-underground-attribution">
@@ -77,5 +65,7 @@ class WeatherChecker extends Component {
         );
 	}
 }
+
+WeatherChecker = connect()(WeatherChecker);
 
 export default WeatherChecker;

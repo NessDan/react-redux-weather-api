@@ -30,6 +30,7 @@
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
     "promise": "8.0.1",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dev-utils": "^4.0.0",
     "react-dom": "^15.6.1",
@@ -90,6 +91,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "redux-devtools": "^3.4.0"
+    "redux-devtools": "^3.4.0",
+    "remote-redux-devtools": "^0.5.12"
   }
 }

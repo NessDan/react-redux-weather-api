@@ -1,4 +1,8 @@
-.city-weather-check > * {
+.city-weather-check {
+	margin-bottom: 50px;
+}
+
+.city-weather-check form > * {
 	display: block;
 }
 
