@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { getWeatherConditions } from 'api/weather';
-import { setCityConditions } from 'actions/weather';
+import { getCityWeather } from 'api/weather';
+import { setCityConditions, setConditionsError } from 'actions/weather';
 import './index.css';
 
 class WeatherChecker extends Component {
@@ -19,11 +19,17 @@ class WeatherChecker extends Component {
 
 		const location = this.state.location;
 
-		getWeatherConditions(location)
+		getCityWeather(location)
 			.then(setCityConditions) // generate our action
 			.then(this.props.dispatch) // then dispatch it
 			.catch((err) => {
-				console.error('Something went wrong while getting your weather.', err);
+				const errorString = 'Something went wrong while getting your weather. ' + err;
+				console.error(errorString);
+
+				setConditionsError({
+						err: errorString
+					})
+					.then(this.props.dispatch);
 			});
 	}
 
